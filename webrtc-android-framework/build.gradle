@@ -95,7 +95,7 @@ ext {
     siteUrl = 'https://github.com/USAMAWIZARD/maven-upload.git'
     gitUrl = 'https://github.com/USAMAWIZARD/maven-upload.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.1'
 
     developerId = 'test'
     developerName = 'test'
