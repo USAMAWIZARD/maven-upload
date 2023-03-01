@@ -1,0 +1,56 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.1'
+
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id 'maven-publish'
+    id 'signing'
+    id("io.github.gradle-nexus.publish-plugin").version("1.1.0")
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+
+    }
+}
+/*
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+*/
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events "started", "skipped", "passed", "failed"
+        showStandardStreams true
+        showStackTraces = true
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = ossrhUsername
+            password = ossrhPassword
+            stagingProfileId =sonatypeStagingProfileId //"fdd1a82b079e2"
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+
+    }
+}
