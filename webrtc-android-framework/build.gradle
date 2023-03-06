@@ -2,13 +2,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'jacoco'
 apply plugin:'maven-publish'
 apply plugin:'signing'
-apply from: '../loadCredentials.gradle'
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -28,6 +27,7 @@ android {
        sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     testOptions {
         animationsDisabled true
         unitTests.all {
@@ -38,7 +38,6 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
     }
-
     namespace 'io.antmedia.webrtcandroidframework'
 }
 
@@ -52,9 +51,9 @@ tasks.withType(Test) {
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest','createDebugCoverageReport']) {
     reports {
-         xml.enabled = true
-         html.enabled = true
-     }
+        xml.enabled = true
+        html.enabled = true
+    }
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def debugTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug", excludes: fileFilter)
@@ -76,34 +75,34 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.5.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:1.10.19'
-    //testImplementation project(path: ':webrtc-android-framework')
+    testImplementation project(path: ':webrtc-android-framework')
     testImplementation 'org.apache.commons:commons-lang3:3.12.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 }
 
+
 ext {
     bintrayRepo = 'maven'
     bintrayName = 'webrtc-android-framework'
 
-    publishedGroupId = 'io.github.usamawizard'
+    publishedGroupId = 'io.github.USAMAWIZARD'
     libraryName = 'webrtc-android-framework'
     artifact = 'webrtc-android-framework'
 
     libraryDescription = 'WebRTC Android SDK to build andoid app with ant media server '
 
-    siteUrl = 'https://github.com/USAMAWIZARD/maven-upload.git'
-    gitUrl = 'https://github.com/USAMAWIZARD/maven-upload.git'
+    siteUrl = 'https://github.com/ant-media/WebRTC-Android-SDK'
+    gitUrl = 'https://github.com/ant-media/WebRTC-Android-SDK.git'
 
-    libraryVersion = '1.0.1'
+    libraryVersion = '4.13.5-SNAPSHOT'
 
-    developerId = 'test'
-    developerName = 'test'
-    developerEmail = 'test@test.com'
+    developerId = 'mekya'
+    developerName = 'Ahmet Oguz Mermerkaya'
+    developerEmail = 'ahmetmermerkaya@gmail.com'
 
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
+    licenseName = 'MIT License'
+    licenseUrl = 'https://github.com/ant-media/WebRTC-Android-SDK/blob/master/LICENSE.md'
 }
 afterEvaluate {
     publishing {
@@ -140,16 +139,29 @@ afterEvaluate {
                     }
                 }
 
+            }
+        }
+            repositories {
+                maven {
+                    credentials {
+                        username ossrhUsername
+                        password ossrhPassword
+                    }
+
+                    def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/'
+                    def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                    url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                }
+
         }
     }
-    signing {
-        useInMemoryPgpKeys(
-        rootProject.ext["signing.keyId"],
-        rootProject.ext["signing.key"],
-        rootProject.ext["signing.password"],
-        )
-        sign publishing.publications.release
+        signing {
+            useInMemoryPgpKeys(
+                    rootProject.ext["signing.keyId"],
+                    rootProject.ext["signing.key"],
+                    rootProject.ext["signing.password"],
+            )
+            sign publishing.publications.release
+
     }
 }
-}
-
