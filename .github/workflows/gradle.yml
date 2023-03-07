@@ -46,9 +46,10 @@ jobs:
           cores: 3
           emulator-options: -no-snapshot-save -gpu swiftshader_indirect -no-window -noaudio -no-boot-anim
           if: github.ref == 'refs/heads/master'
-            run ./gradlew  publish;
-          else:
-            run ./gradlew  publish;
+              echo "runscript=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV          
+          else: 
+            echo "runscript=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV       
+          script: $runscript
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
