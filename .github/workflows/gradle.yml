@@ -56,24 +56,3 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
-
-      - name: Archive Test Report
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: Test report
-          path: |
-            webrtc-android-sample-app/build/reports/tests/testDebugUnitTest/
-            webrtc-android-sample-app/build/reports/jacoco/jacocoTestReport/
-            webrtc-android-sample-app/build/reports/androidTests/
-            webrtc-android-framework/build/reports/tests/testDebugUnitTest/
-            webrtc-android-framework/build/reports/jacoco/jacocoTestReport/
-            webrtc-android-framework/build/reports/androidTests/
-            webrtc-android-sample-app/build/logcat.txt
-            webrtc-android-sample-app/build/screen.png
-
-      - name: Upload Test Report to Codecov
-        uses: codecov/codecov-action@v3.1.1
-        with:
-          files: webrtc-android-framework/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml,webrtc-android-sample-app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
-          fail_ci_if_error: true
