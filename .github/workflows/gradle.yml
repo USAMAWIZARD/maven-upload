@@ -18,7 +18,7 @@ on: [push, pull_request]
 
 jobs:
   unit-tests:
-    runs-on: ubuntu-18.04
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
@@ -45,12 +45,10 @@ jobs:
           disable-animations: true
           cores: 3
           emulator-options: -no-snapshot-save -gpu swiftshader_indirect -no-window -noaudio -no-boot-anim
-          if: github.ref == 'refs/heads/master'
-            echo "runscript=$(./gradlew jacocoTestReport publish; EXIT_CODE=$?; /Users/runner/Library/Android/sdk/platform-tools/adb logcat -d > webrtc-android-sample-app/build/logcat.txt; exit $EXIT_CODE)" >> $GITHUB_ENV          
-          else: 
-            echo "runscript=$(./gradlew jacocoTestReport; EXIT_CODE=$?; /Users/runner/Library/Android/sdk/platform-tools/adb logcat -d > webrtc-android-sample-app/build/logcat.txt; exit $EXIT_CODE)" >> $GITHUB_ENV       
-          script: $runscript
-
+          script: ./gradlew jacocoTestReport; EXIT_CODE=$?; /Users/runner/Library/Android/sdk/platform-tools/adb logcat -d > webrtc-android-sample-app/build/logcat.txt; exit $EXIT_CODE
+      - name: Deploy to maven
+        if: github.ref == 'refs/heads/master'
+        run: ./gradlew publish
       - name: Archive Test Report
         if: always()
         uses: actions/upload-artifact@v3
@@ -71,4 +69,3 @@ jobs:
         with:
           files: webrtc-android-framework/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml,webrtc-android-sample-app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
           fail_ci_if_error: true
-
